@@ -26,14 +26,18 @@ namespace ConsoleApp2
             var CharArr = str.ToCharArray();
             int qua_lit = CharArr.Except(EngLitter).Count();
 
-            if (0 != qua_lit) //возможно подразумевалось try catch
+            if (0 == qua_lit) //возможно подразумевалось try catch
             {
                 rezult = StringRevers(str);
             }
             else
             {
                 Console.WriteLine("Неверно введено сообщение!");
-                rezult = $"Неверные символы = {CharArr.Except(EngLitter)}";
+                foreach (char i in CharArr.Except(EngLitter))
+                {
+                    rezult += " "+i;
+                }
+                rezult = "Неверрно введённые символы = " + rezult;
             }
             return rezult;
         }
