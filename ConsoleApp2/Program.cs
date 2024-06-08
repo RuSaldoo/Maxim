@@ -8,12 +8,45 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-
     internal class Program
     {
-        private static string StringRevers(string PullString)
-        {                                                       //   abc def          cda fed   
-            if (PullString.Length % 2 == 0)                     //   123 456          321 654
+
+
+
+        static string CheckStr(ref string str)  //Возможно ref ломает
+        {
+            char[] EngLitter = { 'a', 'b', 'c', 'd', 'e',
+                'f', 'g', 'h', 'i','j', 'k',
+                'l', 'm', 'n', 'o', 'p', 'q',
+                'r', 's', 't', 'u', 'v', 'w',
+                'x', 'y', 'z'
+            };
+
+            string rezult = null;
+            var CharArr = str.ToCharArray();
+            int qua_lit = CharArr.Except(EngLitter).Count();
+
+            if (0 == qua_lit) //возможно подразумевалось try catch
+            {
+                rezult = StringRevers(str);
+            }
+            else
+            {
+                Console.WriteLine("Неверно введено сообщение!");
+                foreach (char i in CharArr.Except(EngLitter))
+                {
+                    rezult += " "+i;
+                }
+                rezult = "Неверрно введённые символы = " + rezult;
+            }
+            return rezult;
+        }
+
+
+
+        public static string StringRevers(string PullString)
+        {
+            if (PullString.Length % 2 == 0)
             {
                 char[] arr = PullString.ToCharArray();
                 int len = (PullString.Length / 2);
@@ -37,7 +70,7 @@ namespace ConsoleApp2
         static void Main(string[] args)
         {
             string string1 = Console.ReadLine();
-            Console.WriteLine(StringRevers(string1));
+            Console.WriteLine(CheckStr(ref string1));
             Console.ReadLine();
         }
     }
