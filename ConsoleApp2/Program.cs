@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -12,7 +13,7 @@ namespace ConsoleApp2
     {
         static string CheckStr(ref string str)  //Возможно ref ломает
         {
-            char[] EngLitter = { 'a', 'b', 'c', 'd', 'e',
+            var EngLitter = new List<char> { 'a', 'b', 'c', 'd', 'e',
                 'f', 'g', 'h', 'i','j', 'k',
                 'l', 'm', 'n', 'o', 'p', 'q',
                 'r', 's', 't', 'u', 'v', 'w',
@@ -20,22 +21,21 @@ namespace ConsoleApp2
             };
 
             string rezult = null;
-            var CharArr = str.ToCharArray();
+            var CharArr = new List<char>(str.ToCharArray());
             int qua_lit = CharArr.Except(EngLitter).Count();
 
             if (0 == qua_lit) //возможно подразумевалось try catch
-            {
                 rezult = StringRevers(str);
-            }
+
             else
             {
                 Console.WriteLine("Неверно введено сообщение!");
                 foreach (char i in CharArr.Except(EngLitter))
-                {
                     rezult += " "+i;
-                }
+
                 rezult = "Неверрно введённые символы = " + rezult;
-            }
+            }                               //Невернно ведённые символы
+
             return rezult;
         }
 
@@ -43,16 +43,15 @@ namespace ConsoleApp2
 
         public static string StringRevers(string PullString)
         {
-            var CharArr = PullString.ToCharArray();  //перебрать массив пузырьком (сложнее алгоритм)
+            var CharArr = new List<char>(PullString.ToCharArray());
 
             if (PullString.Length % 2 == 0)
             {                                               //косоёбит
                 string litter_info = String.Empty;
-                char[] arr = PullString.ToCharArray();
+                var arr = new List<char>(PullString.ToCharArray().Reverse());
                 int len = (PullString.Length / 2);
-                Array.Reverse(arr);
-                string Furst_part = new string(arr).Substring(len);
-                string Last_part = new string(arr).Substring(0, len);
+                string Furst_part = new string(arr.ToArray()).Substring(len);
+                string Last_part = new string(arr.ToArray()).Substring(0, len);
                 string rezult = Furst_part + Last_part;
                 var counts = rezult.GroupBy(item => item).Select(grp => new
                 {
@@ -69,9 +68,8 @@ namespace ConsoleApp2
             else
             {                                              //переварачивет + оирг
                 string litter_info = String.Empty;
-                var arr = PullString.ToCharArray();
-                Array.Reverse(arr);
-                string Furst_part = new string(arr);
+                var arr = new List<char>(PullString.ToCharArray().Reverse());
+                string Furst_part = new string(arr.ToArray());
                 string rezult = Furst_part + PullString;
                 var counts = rezult.GroupBy(item => item)
                 .Select(grp => new 
