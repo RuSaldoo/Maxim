@@ -13,10 +13,76 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
+    public class TreeNode
+    {
+        public TreeNode(char data)
+        {
+            Data = data;
+        }
+
+        //данные
+        public char Data { get; set; }
+
+        //левая ветка дерева
+        public TreeNode Left { get; set; }
+
+        //правая ветка дерева
+        public TreeNode Right { get; set; }
+
+        //добавление узла в дерево
+        public void Insert(TreeNode node)
+        {
+            if (node.Data < Data)
+            {
+                if (Left == null)
+                    Left = node;
+                else
+                    Left.Insert(node);
+            }
+            else
+            {
+                if (Right == null)
+                    Right = node;
+                else
+                    Right.Insert(node);
+            }
+        }
+
+        public char[] Transform(List<char> elements = null)
+        {
+            if (elements == null)
+                elements = new List<char>();
+
+            if (Left != null)
+                Left.Transform(elements);
+
+            elements.Add(Data);
+
+            if (Right != null)             
+                Right.Transform(elements);
+
+            return elements.ToArray();
+        }
+        public static char[] TreeSort(char[] array)
+        {
+            var treeNode = new TreeNode(array[0]);
+            for (int i = 1; i < array.Length; i++)
+            {
+                treeNode.Insert(new TreeNode(array[i]));
+            }
+
+            return treeNode.Transform();
+        }
+    }
+
+
+
+
+
     internal class Program
     {
         static List<char> vowelLetters = new List<char> { 'a', 'e', 'i', 'o', 'u', 'y', };
-        static string CheckStr(ref string str)  //Возможно ref ломает
+        static string CheckStr(ref string str)  
         {
             var EngLitter = new List<char> { 'a', 'b', 'c', 'd', 'e',
                 'f', 'g', 'h', 'i','j', 'k',
@@ -46,9 +112,6 @@ namespace ConsoleApp2
             return rezult;
         }
 
-
-
-
         public static string OptionSort(string inputString)
         {
             Console.WriteLine("\nВыберите тип сортировки:\n1 Быстрая сортировка:" +
@@ -57,20 +120,22 @@ namespace ConsoleApp2
             byte count = Convert.ToByte(Console.ReadLine());
             string rezult = null;
 
-            if(count == 1)                  //Соритровка дееровм
+            if(count == 1)                  //Быстрая сортировка
             {
                 Console.WriteLine("Сортировка деревом");
                 var arr = inputString.ToCharArray().ToList();
                 arr.Sort();
                 rezult = new string(arr.ToArray());
             }
-
+            if(count == 2)
+            {
+                var arr = inputString.ToCharArray();
+                rezult = string.Join(" ", TreeNode.TreeSort(arr));
+            }
 
 
             return rezult;
         }
-
-
 
 
         public static string StringRevers(string PullString)
@@ -193,7 +258,7 @@ namespace ConsoleApp2
 
                 //--------------------------------------------------------------------------------
 
-                string rezSortString = new string(arr.ToArray()).Substring(el1, el2 - el1);
+                string rezSortString = new string(arr.ToArray()).Substring(el1, (el2 - el1)+1);
 
                 foreach (var group in counts)
                     litter_info = litter_info + $"Символ = {group.Number}, повторяется {group.Count} раз.\n";
