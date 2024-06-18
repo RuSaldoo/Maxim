@@ -259,6 +259,7 @@ namespace ConsoleApp2
                 //--------------------------------------------------------------------------------
 
                 string rezSortString = new string(arr.ToArray()).Substring(el1, (el2 - el1)+1);
+                string SortSting = OptionSort(rezSortString);
 
                 foreach (var group in counts)
                     litter_info = litter_info + $"Символ = {group.Number}, повторяется {group.Count} раз.\n";
@@ -266,6 +267,8 @@ namespace ConsoleApp2
                 rezult = $"{rezult}\n{litter_info}";
 
                 rezult = $"\n{rezult}\nСтрока из задания 4 = {rezSortString}";
+
+                rezult = $"\n{rezult}\nСтрочька из задания 5 = {SortSting}";
 
                 return rezult;
             }
