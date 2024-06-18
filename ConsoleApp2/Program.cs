@@ -209,6 +209,7 @@ namespace ConsoleApp2
                 //--------------------------------------------------------------------------------
 
                 string rezSortString = new string(arr.ToArray()).Substring(el1, Leng_string);
+                string SortSting = OptionSort(rezSortString);
 
                 foreach (var group in counts)
                     litter_info = litter_info + $"Символ = {group.Number}, повторяется {group.Count} раз.\n";
@@ -217,8 +218,7 @@ namespace ConsoleApp2
 
                 rezult = $"\n{rezult}\nСтрока из задания 4 = {rezSortString}";
 
-
-
+                rezult = $"\n{rezult}\nСтрочька из задания 5 = {SortSting}";
 
                 int indexRemove = API_info.api_get_info(Leng_string);
 
