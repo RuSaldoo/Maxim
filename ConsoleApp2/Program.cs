@@ -10,75 +10,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ConsoleApp2;
 
 namespace ConsoleApp2
 {
-    public class TreeNode
-    {
-        public TreeNode(char data)
-        {
-            Data = data;
-        }
-
-        //данные
-        public char Data { get; set; }
-
-        //левая ветка дерева
-        public TreeNode Left { get; set; }
-
-        //правая ветка дерева
-        public TreeNode Right { get; set; }
-
-        //добавление узла в дерево
-        public void Insert(TreeNode node)
-        {
-            if (node.Data < Data)
-            {
-                if (Left == null)
-                    Left = node;
-                else
-                    Left.Insert(node);
-            }
-            else
-            {
-                if (Right == null)
-                    Right = node;
-                else
-                    Right.Insert(node);
-            }
-        }
-
-        public char[] Transform(List<char> elements = null)
-        {
-            if (elements == null)
-                elements = new List<char>();
-
-            if (Left != null)
-                Left.Transform(elements);
-
-            elements.Add(Data);
-
-            if (Right != null)             
-                Right.Transform(elements);
-
-            return elements.ToArray();
-        }
-        public static char[] TreeSort(char[] array)
-        {
-            var treeNode = new TreeNode(array[0]);
-            for (int i = 1; i < array.Length; i++)
-            {
-                treeNode.Insert(new TreeNode(array[i]));
-            }
-
-            return treeNode.Transform();
-        }
-    }
-
-
-
-
-
     internal class Program
     {
         static List<char> vowelLetters = new List<char> { 'a', 'e', 'i', 'o', 'u', 'y', };
@@ -122,13 +57,14 @@ namespace ConsoleApp2
 
             if(count == 1)                  //Быстрая сортировка
             {
-                Console.WriteLine("Сортировка деревом");
+                Console.WriteLine("Сортировка быстая");
                 var arr = inputString.ToCharArray().ToList();
                 arr.Sort();
                 rezult = new string(arr.ToArray());
             }
             if(count == 2)
             {
+                Console.WriteLine("Сортировка деревом");
                 var arr = inputString.ToCharArray();
                 rezult = string.Join(" ", TreeNode.TreeSort(arr));
             }
@@ -142,6 +78,10 @@ namespace ConsoleApp2
         {
             var CharArr = new List<char>(PullString.ToCharArray());
 
+            int Leng_string = 0;
+            int el1 = 0;
+            int el2 = 0;
+
             if (PullString.Length % 2 == 0)                     //Чётное количество
             {                                               
                 string litter_info = String.Empty;
@@ -151,7 +91,8 @@ namespace ConsoleApp2
                 int len = (PullString.Length / 2);
                 string Furst_part = new string(arr.ToArray()).Substring(len);
                 string Last_part = new string(arr.ToArray()).Substring(0, len);
-                string rezult = Furst_part + Last_part;
+                string wholeStr = Furst_part + Last_part;
+                string rezult = wholeStr;
                 var counts = rezult.GroupBy(item => item).Select(grp => new
                 {
                     Number = grp.Key,
@@ -162,8 +103,6 @@ namespace ConsoleApp2
                 arr.AddRange(rezult);        // 1 2 3 4 5 6 7 8 9
                                              //   2     5   7
 
-                int el1 = 0;
-                int el2 = 0;
                 bool haveEl1 = false;
                 bool haveEl2 = false;
 
@@ -192,7 +131,9 @@ namespace ConsoleApp2
 
                 }
 
-                string rezSortString = new string(arr.ToArray()).Substring(el1, (el2 - el1)+1);
+                Leng_string = (el2 - el1) + 1;
+
+                string rezSortString = new string(arr.ToArray()).Substring(el1, Leng_string);
                 string SortSting = OptionSort(rezSortString);
 
                 foreach (var group in counts)
@@ -203,7 +144,15 @@ namespace ConsoleApp2
 
                 rezult = $"{rezult}\n{litter_info}";
 
-                rezult = $"\n{rezult}\nСтрока из задания 4 = {rezSortString}\nСтрочька из задания 5 = {SortSting}";
+                rezult = $"\n{rezult}\nСтрока из задания 4 = {rezSortString}";
+
+                rezult = $"{rezult}\nСтрочька из задания 5 = {SortSting}";
+
+                int indexRemove = API_info.api_get_info(Leng_string);
+
+                rezult = $"{rezult}\nСтрочька из задания 6 = {wholeStr.Remove(indexRemove, 1)}";
+
+
 
                 return rezult;
             }
@@ -215,7 +164,8 @@ namespace ConsoleApp2
                 string litter_info = String.Empty;
                 var arr = new List<char>(PullString.ToCharArray().Reverse());
                 string Furst_part = new string(arr.ToArray());
-                string rezult = Furst_part + PullString;
+                string wholeStr = Furst_part + PullString;
+                string rezult = wholeStr;
                 var counts = rezult.GroupBy(item => item)
                 .Select(grp => new
                 {
@@ -226,8 +176,6 @@ namespace ConsoleApp2
                 arr.Clear();
                 arr.AddRange(rezult);
 
-                int el1 = 0;
-                int el2 = 0;
                 bool haveEl1 = false;
                 bool haveEl2 = false;
 
@@ -256,9 +204,11 @@ namespace ConsoleApp2
 
                 }
 
+                Leng_string = (el2 - el1) + 1;
+
                 //--------------------------------------------------------------------------------
 
-                string rezSortString = new string(arr.ToArray()).Substring(el1, (el2 - el1)+1);
+                string rezSortString = new string(arr.ToArray()).Substring(el1, Leng_string);
 
                 foreach (var group in counts)
                     litter_info = litter_info + $"Символ = {group.Number}, повторяется {group.Count} раз.\n";
@@ -266,6 +216,13 @@ namespace ConsoleApp2
                 rezult = $"{rezult}\n{litter_info}";
 
                 rezult = $"\n{rezult}\nСтрока из задания 4 = {rezSortString}";
+
+
+
+
+                int indexRemove = API_info.api_get_info(Leng_string);
+
+                rezult = $"{rezult}\nСтрочька из задания 6 = {wholeStr.Remove(indexRemove, 1)}";
 
                 return rezult;
             }
