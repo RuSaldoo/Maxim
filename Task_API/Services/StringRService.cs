@@ -1,23 +1,56 @@
-﻿using Microsoft.Win32.SafeHandles;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using ConsoleApp2;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using Task_API.DAT;
+using Task_API.Models;
 
-namespace ConsoleApp2
+namespace Task_API.Services
 {
-    internal class Program
+    public class StringRService
     {
+        /*static List<StringR> Strings { get; }*/ //может пригодится
+
+        /*static StringRService()  //тестовая фигня
+        {
+            Strings = new List<StringR>
+            {
+                new StringR{ id = 1, OtvString = "asdasd"},
+                new StringR{ id = 2, OtvString = "dsds"}
+            };
+        }*/
+
+        
+
+        /*public static List<StringR> GetAll() => Strings;*/
+
+        /*public static StringR? Get(int id) => Strings.FirstOrDefault(x => x.id == id);*/
+
+        /*public static void Add(StringR str)
+        {
+            str.id = id++;
+            ListStringR.Add(str);
+        }
+
+        public static void Delete(int id)
+        {
+            var str = StringRService.Get(id);
+            if (str != null)
+                return;
+            ListStringR.Remove(str);
+        }
+
+        public static void Update(StringR str)
+        {
+            var index = ListStringR.FindIndex(x => x.id == str.id);
+            if (index == -1)
+            {
+                return;
+            }
+
+            ListStringR[index] = str;
+        }*/
+
         static List<char> vowelLetters = new List<char> { 'a', 'e', 'i', 'o', 'u', 'y', };
-        static string CheckStr(ref string str)  
+        public static string CheckStr(ref string str, int Option_sort)
         {
             var EngLitter = new List<char> { 'a', 'b', 'c', 'd', 'e',
                 'f', 'g', 'h', 'i','j', 'k',
@@ -32,49 +65,22 @@ namespace ConsoleApp2
 
             if (0 == qua_lit)
             {
-                rezult = StringRevers(str);
+                rezult = StringRevers(str, Option_sort);
             }
 
             else
-            {
-                Console.WriteLine("Неверно введено сообщение!");
+            { 
                 foreach (char i in CharArr.Except(EngLitter))
                     rezult += " " + i;
 
                 rezult = "Неверрно введённые символы = " + rezult;
-            }                               //Невернно ведённые символы
+            }                           //Невернно ведённые символы
 
             return rezult;
         }
 
-        public static string OptionSort(string inputString)
-        {
-            Console.WriteLine("\nВыберите тип сортировки:\n1 Быстрая сортировка:" +
-                " Введите 1\n2 Сортировка деревом: Введите 2");
-
-            byte count = Convert.ToByte(Console.ReadLine());
-            string rezult = null;
-
-            if(count == 1)                  //Быстрая сортировка
-            {
-                Console.WriteLine("Сортировка быстая");
-                var arr = inputString.ToCharArray().ToList();
-                arr.Sort();
-                rezult = new string(arr.ToArray());
-            }
-            if(count == 2)
-            {
-                Console.WriteLine("Сортировка деревом");
-                var arr = inputString.ToCharArray();
-                rezult = string.Join(" ", TreeNode.TreeSort(arr));
-            }
-
-
-            return rezult;
-        }
-
-
-        public static string StringRevers(string PullString)
+       
+        public static string StringRevers(string PullString, int Sorting_option)
         {
             var CharArr = new List<char>(PullString.ToCharArray());
 
@@ -83,7 +89,7 @@ namespace ConsoleApp2
             int el2 = 0;
 
             if (PullString.Length % 2 == 0)                     //Чётное количество
-            {                                               
+            {
                 string litter_info = String.Empty;
 
                 var arr = new List<char>(PullString.ToCharArray().Reverse());
@@ -113,20 +119,20 @@ namespace ConsoleApp2
                     {                                                      //0123456789
                         if (arr[i] == vowelLetters[j] && haveEl1 == false)
                         {
-                                el1 = i;
-                                haveEl1 = true;
+                            el1 = i;
+                            haveEl1 = true;
                         }
                         if (arr[(arr.Count - 1) - i] == vowelLetters[j] && haveEl2 == false)
                         {
-                                el2 = (arr.Count-1) - i;
-                                haveEl2 = true;
+                            el2 = (arr.Count - 1) - i;
+                            haveEl2 = true;
                         }
 
                         if (haveEl1 == true && haveEl2 == true)
                             break;
                     }
 
-                    if(haveEl1 == true && haveEl2 == true)
+                    if (haveEl1 == true && haveEl2 == true)
                         break;
 
                 }
@@ -134,7 +140,7 @@ namespace ConsoleApp2
                 Leng_string = (el2 - el1) + 1;
 
                 string rezSortString = new string(arr.ToArray()).Substring(el1, Leng_string);
-                string SortSting = OptionSort(rezSortString);
+                string SortSting = OptionSort(rezSortString, Sorting_option);
 
                 foreach (var group in counts)
                     litter_info = litter_info + $"Символ = {group.Number}," +
@@ -209,7 +215,7 @@ namespace ConsoleApp2
                 //--------------------------------------------------------------------------------
 
                 string rezSortString = new string(arr.ToArray()).Substring(el1, Leng_string);
-                string SortSting = OptionSort(rezSortString);
+                string SortSting = OptionSort(rezSortString, Sorting_option);
 
                 foreach (var group in counts)
                     litter_info = litter_info + $"Символ = {group.Number}, повторяется {group.Count} раз.\n";
@@ -226,17 +232,36 @@ namespace ConsoleApp2
 
                 return rezult;
             }
+
+
+
         }
 
 
-        //-------------------------------------------------------------------------------------------------
-
-
-        static void Main(string[] args)
+        public static string OptionSort(string inputString, int Sorting_option)
         {
-            string string1 = Console.ReadLine();
-            Console.WriteLine(CheckStr(ref string1));
-            Console.ReadLine();
+            /*Console.WriteLine("\nВыберите тип сортировки:\n1 Быстрая сортировка:" +  // Применялось для консольного приложения
+                " Введите 1\n2 Сортировка деревом: Введите 2");*/
+
+            int count = Sorting_option;
+            string rezult = null;
+
+            if (count == 1)                  //Быстрая сортировка
+            {
+                Console.WriteLine("Сортировка быстая");
+                var arr = inputString.ToCharArray().ToList();
+                arr.Sort();
+                rezult = new string(arr.ToArray());
+            }
+            if (count == 2)
+            {
+                Console.WriteLine("Сортировка деревом");
+                var arr = inputString.ToCharArray();
+                rezult = string.Join(" ", TreeNode.TreeSort(arr));
+            }
+
+
+            return rezult;
         }
     }
 }
