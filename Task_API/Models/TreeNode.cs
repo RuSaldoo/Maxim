@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task_API.DAT
+namespace Task_API.Models
 {
     public class TreeNode
     {
