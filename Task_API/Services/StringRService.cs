@@ -7,48 +7,6 @@ namespace Task_API.Services
 {
     public class StringRService
     {
-        /*static List<StringR> Strings { get; }*/ //может пригодится
-
-        /*static StringRService()  //тестовая фигня
-        {
-            Strings = new List<StringR>
-            {
-                new StringR{ id = 1, OtvString = "asdasd"},
-                new StringR{ id = 2, OtvString = "dsds"}
-            };
-        }*/
-
-        
-
-        /*public static List<StringR> GetAll() => Strings;*/
-
-        /*public static StringR? Get(int id) => Strings.FirstOrDefault(x => x.id == id);*/
-
-        /*public static void Add(StringR str)
-        {
-            str.id = id++;
-            ListStringR.Add(str);
-        }
-
-        public static void Delete(int id)
-        {
-            var str = StringRService.Get(id);
-            if (str != null)
-                return;
-            ListStringR.Remove(str);
-        }
-
-        public static void Update(StringR str)
-        {
-            var index = ListStringR.FindIndex(x => x.id == str.id);
-            if (index == -1)
-            {
-                return;
-            }
-
-            ListStringR[index] = str;
-        }*/
-
         static List<char> vowelLetters = new List<char> { 'a', 'e', 'i', 'o', 'u', 'y', };
         public static string CheckStr(ref string str, int Option_sort)
         {
